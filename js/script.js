@@ -1,73 +1,55 @@
-// 1. Initialize Lenis (Smooth Scroll)
+// 1. Smooth Scroll
 const lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smooth: true
 });
-
 function raf(time) {
     lenis.raf(time);
     requestAnimationFrame(raf);
 }
 requestAnimationFrame(raf);
 
-// 2. Custom Cursor (Desktop)
-const cursorDot = document.querySelector('[data-cursor-dot]');
-const cursorOutline = document.querySelector('[data-cursor-outline]');
+// 2. SPOTLIGHT EFFECT (Architecture Vibe)
+// Ye script mouse ki position legi aur CSS variable update karegi
+const heroSection = document.getElementById('hero');
+const spotlight = document.querySelector('.spotlight');
 
-window.addEventListener('mousemove', function(e) {
-    const posX = e.clientX;
-    const posY = e.clientY;
-    
-    cursorDot.style.left = `${posX}px`;
-    cursorDot.style.top = `${posY}px`;
-    
-    cursorOutline.animate({
-        left: `${posX}px`,
-        top: `${posY}px`
-    }, { duration: 500, fill: "forwards" });
-});
-
-// Cursor Hover Interactions
-const interactiveElements = document.querySelectorAll('a, button, .panel');
-interactiveElements.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        cursorOutline.style.width = '60px';
-        cursorOutline.style.height = '60px';
-        cursorOutline.style.borderColor = '#D4AF37';
-    });
-    el.addEventListener('mouseleave', () => {
-        cursorOutline.style.width = '40px';
-        cursorOutline.style.height = '40px';
-        cursorOutline.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-    });
-});
-
-// 3. GSAP Animations (Hero & Parallax)
-gsap.registerPlugin(ScrollTrigger);
-
-// Hero Reveal
-window.addEventListener('load', () => {
-    const tl = gsap.timeline();
-    tl.from(".main-title", { y: 100, opacity: 0, duration: 1, ease: "power4.out" })
-      .from(".subtitle", { y: 20, opacity: 0, duration: 1 }, "-=0.5")
-      .from(".btn-group", { y: 20, opacity: 0, duration: 0.8 }, "-=0.8");
-});
-
-// Parallax Effect (Only Desktop)
-if (window.innerWidth > 768) {
-    gsap.to(".col-1", {
-        y: -150,
-        scrollTrigger: { trigger: ".gallery-section", start: "top bottom", end: "bottom top", scrub: 1 }
-    });
-    
-    gsap.to(".col-2", {
-        y: 100,
-        scrollTrigger: { trigger: ".gallery-section", start: "top bottom", end: "bottom top", scrub: 1.5 }
-    });
-    
-    gsap.to(".col-3", {
-        y: -50,
-        scrollTrigger: { trigger: ".gallery-section", start: "top bottom", end: "bottom top", scrub: 1 }
+if (heroSection) {
+    heroSection.addEventListener('mousemove', (e) => {
+        // Calculate X and Y inside the hero section
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        // CSS Variable set karo
+        spotlight.style.setProperty('--x', `${x}px`);
+        spotlight.style.setProperty('--y', `${y}px`);
     });
 }
+
+// 3. GSAP Animations (Text Reveal)
+gsap.registerPlugin(ScrollTrigger);
+
+window.addEventListener('load', () => {
+    const tl = gsap.timeline();
+    
+    // Tagline fade in
+    tl.from(".tagline", { y: 20, opacity: 0, duration: 0.8 })
+      // Title bada hoke chota hoga (Architectural reveal)
+      .from(".main-title", { y: 50, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.5")
+      .from(".subtitle", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6")
+      .from(".btn-group", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6");
+});
+
+// Masonry Reveal
+gsap.from(".masonry-item", {
+    scrollTrigger: {
+        trigger: ".masonry-container",
+        start: "top 85%",
+    },
+    y: 100,
+    opacity: 0,
+    duration: 1,
+    stagger: 0.1,
+    ease: "power3.out"
+});
