@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROYAL GYPSUM | Riyadh KSA</title>
-    <meta name="description" content="Premium Gypsum & False Ceiling Design in Riyadh.">
     
     <link rel="stylesheet" href="css/style.css">
     
@@ -29,23 +28,21 @@
 
     <main>
         <section class="hero" id="hero">
-            <div class="grid-bg"></div>
-            
-            <div class="spotlight"></div>
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="https://videos.pexels.com/video-files/7578552/7578552-uhd_2560_1440_30fps.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
 
             <div class="hero-content">
                 <p class="tagline">PRECISION • STRUCTURE • DESIGN</p>
                 <h1 class="main-title">ROYAL GYPSUM <br> RIYADH</h1>
-                <p class="subtitle">We shape your ceilings with modern architectural standards.</p>
+                <p class="subtitle">Transforming Spaces with Modern False Ceilings</p>
                 
                 <div class="btn-group">
-                    <a href="#portfolio" class="cta-btn primary">View Projects</a>
+                    <a href="#portfolio" class="cta-btn primary">Our Work</a>
                     <a href="https://wa.me/966532256285" class="cta-btn secondary">WhatsApp Us</a>
                 </div>
             </div>
-            
-            <div class="border-line top-line"></div>
-            <div class="border-line bottom-line"></div>
         </section>
 
         <section class="about-section">
@@ -65,18 +62,8 @@
                 <p class="section-desc">Explore our exclusive projects in Riyadh</p>
             </div>
 
-            <div class="masonry-container">
-                <div class="masonry-item"><img src="imgs/img.jfif"><div class="overlay"><h3>Grand Villa</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 1.jfif"><div class="overlay"><h3>Majlis</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 2.jfif"><div class="overlay"><h3>Bedroom</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 3.jfif"><div class="overlay"><h3>Kitchen</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 4.jfif"><div class="overlay"><h3>Lounge</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 5.jfif"><div class="overlay"><h3>Office</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 6.jfif"><div class="overlay"><h3>Corridor</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 7.jfif"><div class="overlay"><h3>Partition</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 8.jfif"><div class="overlay"><h3>Classic</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 9.jfif"><div class="overlay"><h3>Modern</h3></div></div>
-                <div class="masonry-item"><img src="imgs/img 10.jfif"><div class="overlay"><h3>Commercial</h3></div></div>
+            <div class="masonry-container" id="gallery-grid">
+                <div class="loader">Loading Designs...</div>
             </div>
         </section>
 
@@ -94,9 +81,12 @@
         </footer>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="js/script.js"></script>
+    
 </body>
 </html>

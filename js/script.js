@@ -1,55 +1,72 @@
-// 1. Smooth Scroll
-const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smooth: true
-});
-function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
+const appUrl = 'https://fmqkvwnlptzhrjqltxay.supabase.co'; 
+const appKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtcWt2d25scHR6aHJqcWx0eGF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExNzEwNTMsImV4cCI6MjA4Njc0NzA1M30._3bbX7JSFH9TIGr5VihPlrOdgyItM0Ai4nspUPHXqAE'; 
+
+// FIX: Variable name changed from 'supabase' to 'db' to avoid conflict
+const db = window.supabase.createClient(appUrl, appKey);
+
+// 2. FETCH GALLERY
+async function fetchGallery() {
+    const container = document.getElementById('gallery-grid');
+    
+    // FIX: Using 'db' instead of 'supabase'
+    const { data: designs, error } = await db
+        .from('ceiling_designs')
+        .select('*')
+        .order('id', { ascending: false });
+
+    if (error) {
+        console.error("Error:", error);
+        if(container) container.innerHTML = '<p style="text-align:center; color:red;">Failed to load.</p>';
+        return;
+    }
+
+    if (!designs || designs.length === 0) {
+        if(container) container.innerHTML = '<p style="text-align:center; color:#888;">No designs yet.</p>';
+        return;
+    }
+
+    if(container) container.innerHTML = '';
+
+    designs.forEach(design => {
+        const item = document.createElement('div');
+        item.className = 'masonry-item';
+        item.innerHTML = `
+            <img src="${design.image_url}" alt="${design.title}" loading="lazy">
+            <div class="overlay">
+                <h3>${design.title}</h3>
+                ${design.category ? `<p style="font-size:0.8rem; color:#D4AF37;">${design.category}</p>` : ''}
+            </div>
+        `;
+        if(container) container.appendChild(item);
+    });
+
+    animateGallery();
 }
+
+// 3. ANIMATIONS
+// Smooth Scroll
+const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
+function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
 requestAnimationFrame(raf);
 
-// 2. SPOTLIGHT EFFECT (Architecture Vibe)
-// Ye script mouse ki position legi aur CSS variable update karegi
-const heroSection = document.getElementById('hero');
-const spotlight = document.querySelector('.spotlight');
+// GSAP
+gsap.registerPlugin(ScrollTrigger);
 
-if (heroSection) {
-    heroSection.addEventListener('mousemove', (e) => {
-        // Calculate X and Y inside the hero section
-        const x = e.clientX;
-        const y = e.clientY;
-        
-        // CSS Variable set karo
-        spotlight.style.setProperty('--x', `${x}px`);
-        spotlight.style.setProperty('--y', `${y}px`);
+function animateGallery() {
+    gsap.from(".masonry-item", {
+        scrollTrigger: { trigger: ".masonry-container", start: "top 85%" },
+        y: 100, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out"
     });
 }
 
-// 3. GSAP Animations (Text Reveal)
-gsap.registerPlugin(ScrollTrigger);
-
+// INIT
 window.addEventListener('load', () => {
+    // Hero Animations
     const tl = gsap.timeline();
-    
-    // Tagline fade in
     tl.from(".tagline", { y: 20, opacity: 0, duration: 0.8 })
-      // Title bada hoke chota hoga (Architectural reveal)
       .from(".main-title", { y: 50, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.5")
       .from(".subtitle", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6")
       .from(".btn-group", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6");
-});
 
-// Masonry Reveal
-gsap.from(".masonry-item", {
-    scrollTrigger: {
-        trigger: ".masonry-container",
-        start: "top 85%",
-    },
-    y: 100,
-    opacity: 0,
-    duration: 1,
-    stagger: 0.1,
-    ease: "power3.out"
+    fetchGallery();
 });
